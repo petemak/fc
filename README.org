@@ -1,0 +1,112 @@
+#+TITLE: Flash Cards application 
+* Introduction 
+Flashcards allow repetetive memorisation of information. 
+A card has a question on once site and an answer on tghe other.
+
+  
+Lets build a flash card application with Clojure. 
+
+* Functional Requirements 
+** The application wll provided functionality to do the follwing:
+1. Create a user acount
+2. Add a deck
+3. Add card to a deck
+4. Study a card and mark it as done
+   
+* System requirements
+We want the application to be available online and acessible from 
+any device with a browser over HTTP
+
+* Application design
+** Libraries / technology stack
+
+*** Component management
+- weavejester/integrant - dependency injection
+- [[[[https://github.com/weavejester/integrant]]]]
+- tolitius/cprop
+- [[[[ https://github.com/tolitius/cprop]]]]
+ 
+
+*** UI 
+- *ClojureScript* - UI layer
+- *re-frame* - a ClojureScript framework for UIs
+- *re-posh* - manage re-frame application state
+- *DataScript* - immutable in-memory databse based on Datalog 
+- [[[[https://github.com/day8/re-frame]]]]
+- [[[[https://github.com/denistakeda/re-posh]]]]
+
+
+*** Middle layer 
+- RESTful endpoints
+- *HttpKit* - Web sever 
+- *Reitit* - request routing
+- Custom middleware for DB
+- Data coercion
+- [[[[https://github.com/metosin/reitit]]]]
+     
+
+*** Database layer
+- with Datomic (schema, query, pull, specs)
+- [[[[https://docs.datomic.com/on-prem/index.html]]]]
+
+
+*** Build management
+- CLI tools or leinigen
+- [[[[https://clojure.org/guides/getting_started]]]]
+  
+  
+** Information Model
+*** User
+- id            -> UUID
+- first-name    -> string
+- last-name     -> string
+- email         -> string
+- password      -> string (hashed)
+- token         -> string (hashed)
+  
+*** Deck
+- id            -> UUID
+- author        -> ref
+- title         -> string
+- tags          -> list of strings
+  
+*** Card
+- id            
+- deck          -> ref
+- front         -> string
+- back          -> string
+- progress      -> long (%)
+- next study date -> date / instant  
+  date
+  
+ 
+** HTTP rest endpoints
+*** Authentication
+- /api/login  => POST login user
+- /api/logout => POST log out a user
+
+*** User management
+- /api/users           => GET - get list of all users
+- /api/users           => POST - register a new user
+- /api/users/:user-id  => POST - udpate user
+- /api/users/:user-id  => GET - get a user by id
+- /api/users/:user-id  => DELETE - gdelete a user by id
+
+*** Deck
+- /api/users/:user-id/decks           => GET - get all decks by a given user
+- /api/users/:user-id/decks           => POST create a new deck
+- /api/users/:user-id/decks/:deck-id  => GET user deck by id
+- /api/users/:user-id/decks/:deck-id  => PUT update user's deck by id
+- /api/users/:user-id/decks/:deck-id  => DELETE user's deck by id
+  
+*** Card
+- /api/users/:user-id/decks/:deck-id/cards           => GET - get all cards of a user by deck-id
+- /api/users/:user-id/decks/:deck-id/cards           => POST - create a new card by deck-id
+- /api/users/:user-id/decks/:deck-id/cards/:card-id  => GET - get one of a users cards by deck and card id
+- /api/users/:user-id/decks/:deck-id/cards/:card-id  => PUT - update a card by deck and user id
+- /api/users/:user-id/decks/:deck-id/cards/:card-id  => DELETE - delete a user's card by deck and user id
+
+
+   
+    
+
