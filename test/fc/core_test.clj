@@ -1,11 +1,12 @@
 (ns fc.core-test
   (:use [midje.sweet])
   (:require [fc.core :as fc]
-            [cprop.core :as cp]))
+            [conf-er :as cfr]))
 
 
 
-(fact "Version must be correct"
-      (let [conf (cp/load-config)
+(fact "API Version must be correctly read from config "
+      (let [conf (cfr/config :config)
             ver (conf :version)]
+        (some? ver) => true
         (fc/version) => ver))

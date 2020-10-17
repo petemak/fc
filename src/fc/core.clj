@@ -1,18 +1,18 @@
 (ns fc.core
-  (:require [cprop.core :as conf]))
+  (:require [conf-er :as conf]))
 
 ;;===============================================
 ;; Application state
-(def state (atom nil))
+(def config (atom nil))
 
 
 ;;===============================================
 ;; Application state
-(defn load-state
+(defn load-config
   "Initiate stae atom"
   []
   (try
-    (reset! state (conf/load-config))
+    (reset! config (conf/config :config))
     (catch Exception e (str "could not load configuration: " (.getMessage e)))))
 
 ;;===============================================
@@ -20,9 +20,9 @@
 (defn version
   "Applcation version"
   []
-  (if (nil? @state)
-    (load-state))
-  (:version @state))
+  (if (nil? @config)
+    (load-config))
+  (:version @config))
 
 
 ;;===============================================
@@ -30,5 +30,5 @@
 (defn -main
   "Applcation entry point"
   []
-  (load-state)
+  (load-config)
   (println "::dc.core => FC server started ..."))

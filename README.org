@@ -18,13 +18,44 @@ We want the application to be available online and acessible from
 any device with a browser over HTTP
 
 * Application design
+
+
+   
+    
+
+
+
+
 ** Libraries / technology stack
 
 *** Component management
-- weavejester/integrant - dependency injection
-- [[[[https://github.com/weavejester/integrant]]]]
-- tolitius/cprop
-- [[[[ https://github.com/tolitius/cprop]]]]
+**** weavejester/integrant - dependency injection
+   [[[[https://github.com/weavejester/integrant]]]]
+
+**** conf-er/conf-er - configuration
+   [[[[https://github.com/TouchType/conf-er]]]]
+The configuration is specified as a jvm-option in deps.edn in the alias :opts
+
+-            :opts {:jvm-opts ["-Dconfig=config/config.edn"]} -
+#+NAME: conf-er
+#+BEGIN_SRC edn
+{:paths []
+ :deps {org.clojure/clojure      {:mvn/version "1.10.1"}
+        conf-er/conf-er          {:mvn/version "1.0.1"}}
+ :aliases {:main ...
+           :test ...           
+           :opts {:jvm-opts ["-Dconfig=config/config.edn"]}}}
+#+END_SRC
+
+The aliases are loaded using clj -A:... or added to .dir-locals.el
+and loaded during cider-jack-in
+
+#+NAME: dir-locals.el
+#+BEGIN_SRC <language> <switches> <header arguments>
+((nil
+  (cider-clojure-cli-global-options . "-A:dev:test:opts")))
+#+END_SRC
+
  
 
 *** UI 
@@ -53,6 +84,11 @@ any device with a browser over HTTP
 *** Build management
 - CLI tools or leinigen
 - [[[[https://clojure.org/guides/getting_started]]]]
+
+*** Test manahent
+Testing library is *midje*
+Tests are run with -mdije.repl/autotest- from the REPL. This continuously polls the file system
+for changes to code and reruns the tests
   
   
 ** Information Model
@@ -105,8 +141,3 @@ any device with a browser over HTTP
 - /api/users/:user-id/decks/:deck-id/cards/:card-id  => GET - get one of a users cards by deck and card id
 - /api/users/:user-id/decks/:deck-id/cards/:card-id  => PUT - update a card by deck and user id
 - /api/users/:user-id/decks/:deck-id/cards/:card-id  => DELETE - delete a user's card by deck and user id
-
-
-   
-    
-
